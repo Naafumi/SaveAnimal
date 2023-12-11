@@ -34,18 +34,20 @@ FPS = 60
 # speed of game
 begin_game_speed = 3
 game_speed = 3
+speed_create = 3000
 
 score = 0
 
 # create enemies and group for function which generate them in game
-enemies_images = ['1.png', '2.png']
+enemies_images = ['1.png', '2.png', '3.png']
+
 enemies_surfaces = [pygame.image.load('images/enemies/' + path).convert_alpha() for path in enemies_images]
 
 enemies_gr = pygame.sprite.Group()
 
 # EVENTS
 CREATE_ENEMY = pygame.USEREVENT
-pygame.time.set_timer(CREATE_ENEMY, 1000)
+pygame.time.set_timer(CREATE_ENEMY, speed_create)
 
 CHANGE_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(CHANGE_SPEED, 4000)
@@ -64,21 +66,27 @@ player_group.add(player)
 
 def display_score():
     global score
-    score += game_speed // 2
+    score += game_speed // 3
 
     text_score = font_score.render(f"score: {score}", False, WHITE)
     return text_score
 
 
 def reset_game():
+    #clear enemies
     enemies_gr.empty()
+
+    #reset score
     global score
     score = 0
+
+    #change speed and position to initial
     global game_speed
     game_speed = begin_game_speed
     global player
+    player.rect.x = player.rect_begin
 
-    player.rect = player.rect_begin
+    #activate game and close scoreboard
     global game_active
     game_active = True
     global score_board
@@ -118,8 +126,12 @@ if __name__ == "__main__":
 
                 if event.type == CREATE_ENEMY:
                     createEnemy(enemies_gr, enemies_images, enemies_surfaces, WIDTH)
+                    print(speed_create)
                 if event.type == CHANGE_SPEED:
                     game_speed += 1
+
+                    speed_create = 1500//(game_speed//begin_game_speed)
+                    pygame.time.set_timer(CREATE_ENEMY, speed_create)
 
         if game_active:
 

@@ -24,17 +24,16 @@ class Enemy(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, width, height):
         pygame.sprite.Sprite.__init__(self)
-        print(1)
+
         self.image = pygame.transform.scale(pygame.image.load("images/bear3.png").convert_alpha(), (width // 10, width // 7))
         self.rect = self.image.get_rect(centerx=width // 2, bottom=height - self.image.get_height() * 2)
-        self.rect_begin = self.image.get_rect(centerx=width // 2, bottom=height - self.image.get_height() * 2)
-
+        self.rect_begin = width // 2 - (self.rect.width // 2)
         self.mask = pygame.mask.from_surface(self.image)
 
 
 class Background:
     def __init__(self, WIDTH, HEIGHT):
-        self.image = pygame.transform.scale(pygame.image.load("images/bg1.png").convert(), (WIDTH, HEIGHT))
+        self.image = pygame.transform.scale(pygame.image.load("images/bg2.png").convert(), (WIDTH, HEIGHT))
         self.tiles = ceil(HEIGHT / self.image.get_height()) + 1  # tiles make endless background scrolling ,
         self.list_bg = [self.image for x in range(self.tiles)]
         self.scroll = 0  # variable which scroll our background
@@ -42,10 +41,10 @@ class Background:
 
 class Button:
     def __init__(self, y, width, height, name):
-        self.image = pygame.transform.scale(pygame.image.load(f"images/buttons/{name}"), (width // 6, height //15))
+        self.image = pygame.transform.scale(pygame.image.load(f"images/buttons/{name}"), (width // 6, height // 15))
 
         self.rect = self.image.get_rect(center=(0, y))
-        print(y)
+
         self.rect.x = width//2 - self.image.get_width()//2
 
     def draws(self):

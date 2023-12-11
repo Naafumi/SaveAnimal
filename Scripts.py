@@ -6,6 +6,7 @@ import pygame
 def createEnemy(group, enemies_images, enemies_surfaces, width):
     random_index = random.randint(0, len(enemies_images) - 1)
     random_x = random.randint(20, width - 20)
+
     return Enemy(random_x, enemies_surfaces[random_index], group)
 
 
