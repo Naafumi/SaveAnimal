@@ -16,7 +16,7 @@ HEIGHT = 800
 SCREEN_SIZE = (WIDTH, HEIGHT)
 
 # constant variables
-COLOR = (1, 140, 120)
+COLOR = (0, 140, 120)
 WHITE = (255, 255, 255)
 BLUE = (0, 50, 255)
 
