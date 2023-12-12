@@ -34,14 +34,14 @@ FPS = 60
 # speed of game
 begin_game_speed = 3
 game_speed = 3
+speed_create_begin = 3000
 speed_create = 3000
 
 score = 0
 
 # create enemies and group for function which generate them in game
 enemies_images = {
-    #'oil': ['1.png', '2.png', '3.png', '4.png'],
-    #'cars': ['3.png']
+    'oil': [f"{index}.png" for index in [1, 2, 3, 4]],
     'cars': [f"{index}.png" for index in [1, 2, 3, 4]]
 
 }
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     for path in enemies_images:
         if path == 'oil':
             for index in enemies_images[path]:
-                enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}.png').convert_alpha(), (WIDTH//9, HEIGHT//13)))
+                enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH//9, HEIGHT//13)))
 
     for path in enemies_images:
         if path == 'cars':
@@ -106,6 +106,8 @@ def reset_game():
     game_speed = begin_game_speed
     global player
     player.rect.x = player.rect_begin
+    global speed_create
+    speed_create = speed_create_begin
 
     #activate game and close scoreboard
     global game_active
@@ -127,13 +129,17 @@ if __name__ == "__main__":
 
             if score_board:
 
+
+
+
+
                 screen.fill((90, 130, 255))
                 global actual_score
                 screen.blit(actual_score, (WIDTH // 2 - actual_score.get_width() // 2, HEIGHT // 15))
 
-                if but_restart.draws():
+                if but_restart.draws(WIDTH, HEIGHT):
                     reset_game()
-                if but_quit.draws():
+                if but_quit.draws(WIDTH, HEIGHT):
                     pygame.quit()
                     exit()
 
@@ -157,7 +163,9 @@ if __name__ == "__main__":
         if game_active:
 
             game_active, score_board = collideRect(player, enemies_gr)
+
             if not game_active:
+                print(1)
                 continue
             
 
@@ -173,6 +181,7 @@ if __name__ == "__main__":
                         player.rect.x += game_speed
                     else:
                         player.rect.x = WIDTH - player.rect.width
+
 
             # here we display our background and change his coordinate and after we display this backgtround again. This imitates background scrolling
             for i in range(0, bg.tiles):

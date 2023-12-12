@@ -48,7 +48,7 @@ class Button:
 
         self.rect.x = width//2 - self.image.get_width()//2
 
-    def draws(self):
+    def draws(self, *args):
         # draw button
 
         from main import screen
@@ -60,6 +60,8 @@ class Button:
         action = False
         # check if mouse is over the button and click it
         if self.rect.collidepoint(pos):
+            self.rect.width = args[0]//4
+            self.rect.height = args[1]//10
             if pygame.mouse.get_pressed()[0] == 1:
                 action = True
         return action
