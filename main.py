@@ -39,9 +39,30 @@ speed_create = 3000
 score = 0
 
 # create enemies and group for function which generate them in game
-enemies_images = ['1.png', '2.png', '3.png']
+enemies_images = {
+    #'oil': ['1.png', '2.png', '3.png', '4.png'],
+    #'cars': ['3.png']
+    'cars': [f"{index}.png" for index in [1, 2, 3, 4]]
 
-enemies_surfaces = [pygame.image.load('images/enemies/' + path).convert_alpha() for path in enemies_images]
+}
+enemies_surfaces = []
+if __name__ == "__main__":
+    for path in enemies_images:
+        if path == 'oil':
+            for index in enemies_images[path]:
+                enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}.png').convert_alpha(), (WIDTH//9, HEIGHT//13)))
+
+    for path in enemies_images:
+        if path == 'cars':
+            for index in enemies_images[path]:
+                if index == '3.png' or index == '4.png':
+                    enemies_surfaces.append(
+                        pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+                                               (WIDTH // 10, HEIGHT // 5)))
+                else:
+                    enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 4, HEIGHT // 9)))
+
+
 
 enemies_gr = pygame.sprite.Group()
 
@@ -126,7 +147,7 @@ if __name__ == "__main__":
 
                 if event.type == CREATE_ENEMY:
                     createEnemy(enemies_gr, enemies_images, enemies_surfaces, WIDTH)
-                    print(speed_create)
+
                 if event.type == CHANGE_SPEED:
                     game_speed += 1
 

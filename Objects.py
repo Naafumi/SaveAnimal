@@ -6,8 +6,9 @@ class Enemy(pygame.sprite.Sprite):
 
     def __init__(self, x, surface, group):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(surface, (75, 50))
-        self.rect = self.image.get_rect(center=(x, -50))
+        self.image = surface
+        self.height = self.image.get_height()
+        self.rect = self.image.get_rect(center=(x, -self.height))
         self.mask = pygame.mask.from_surface(self.image)
 
         self.add(group)
@@ -32,9 +33,9 @@ class Player(pygame.sprite.Sprite):
 
 
 class Background:
-    def __init__(self, WIDTH, HEIGHT):
-        self.image = pygame.transform.scale(pygame.image.load("images/bg2.png").convert(), (WIDTH, HEIGHT))
-        self.tiles = ceil(HEIGHT / self.image.get_height()) + 1  # tiles make endless background scrolling ,
+    def __init__(self, width, height):
+        self.image = pygame.transform.scale(pygame.image.load("images/bg2.png").convert(), (width, height))
+        self.tiles = ceil(height / self.image.get_height()) + 1  # tiles make endless background scrolling ,
         self.list_bg = [self.image for x in range(self.tiles)]
         self.scroll = 0  # variable which scroll our background
 
