@@ -27,7 +27,7 @@ font_score = pygame.font.Font('fonts/pixel.ttf', WIDTH // 20)
 screen = pygame.display.set_mode(SCREEN_SIZE)  # provide size of screen
 pygame.display.set_caption("Save Animal")  # Game's name
 pygame.display.set_icon(
-    pygame.transform.rotate(pygame.image.load("images/bear.png").convert(), 180))  # our logo of game
+pygame.transform.rotate(pygame.image.load("images/bear.png").convert(), 180))  # our logo of game
 
 clock = pygame.time.Clock()
 FPS = 60
@@ -36,7 +36,6 @@ begin_game_speed = 3
 game_speed = 3
 speed_create_begin = 3000
 speed_create = 3000
-
 score = 0
 
 # create enemies and group for function which generate them in game
@@ -46,6 +45,9 @@ enemies_images = {
 
 }
 enemies_surfaces = []
+
+
+
 if __name__ == "__main__":
     for path in enemies_images:
         if path == 'oil':
@@ -80,11 +82,10 @@ but_quit = Button((but_restart.rect.height + HEIGHT // 2), WIDTH, HEIGHT, "exit.
 
 
 player = Player(WIDTH, HEIGHT)
-
 player_group = pygame.sprite.Group()
 player_group.add(player)
 
-
+#here code take actual score and then convert int to pygame text
 def display_score():
     global score
     score += game_speed // 3
@@ -122,29 +123,24 @@ if __name__ == "__main__":
 
         keys = pygame.key.get_pressed()
 
+
+       #check quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
 
             if score_board:
-
-
-
-
-
+#if our game is paused code activate end background
                 screen.fill((90, 130, 255))
                 global actual_score
                 screen.blit(actual_score, (WIDTH // 2 - actual_score.get_width() // 2, HEIGHT // 15))
-
+#draw buttons and check whether are pressed
                 if but_restart.draws(WIDTH, HEIGHT):
                     reset_game()
                 if but_quit.draws(WIDTH, HEIGHT):
                     pygame.quit()
                     exit()
-
-
-
                 pygame.display.update()
 
             if game_active:
@@ -161,15 +157,25 @@ if __name__ == "__main__":
                     pygame.time.set_timer(CREATE_ENEMY, speed_create)
 
         if game_active:
-
+            actual_score = display_score()
             game_active, score_board = collideRect(player, enemies_gr)
 
+#if game is over code draw background for fast loading score board and passes the rest of game code
             if not game_active:
-                print(1)
+                screen.fill((90, 130, 255))
+
+                screen.blit(actual_score, (WIDTH // 2 - actual_score.get_width() // 2, HEIGHT // 15))
+
+                if but_restart.draws(WIDTH, HEIGHT):
+                    reset_game()
+                if but_quit.draws(WIDTH, HEIGHT):
+                    pygame.quit()
+                    exit()
+                pygame.display.update()
                 continue
             
 
-            # checks keys of movement
+            # checks player movement
             if pygame.KEYDOWN:
                 if keys[pygame.K_LEFT] or keys[pygame.K_a]:
                     if player.rect.x > 0:
@@ -183,10 +189,11 @@ if __name__ == "__main__":
                         player.rect.x = WIDTH - player.rect.width
 
 
-            # here we display our background and change his coordinate and after we display this backgtround again. This imitates background scrolling
+# here we display our background and change his coordinate and after we display this background again. This imitates background scrolling
             for i in range(0, bg.tiles):
                 screen.blit(bg.list_bg[i], (0,
-                                            -i * HEIGHT + bg.scroll)) if -i * HEIGHT + bg.scroll < HEIGHT else None  # there program use list of images(background) and scroll them
+                                            -i * HEIGHT + bg.scroll)) if -i * HEIGHT + bg.scroll < HEIGHT else None
+                # there program use list of images(background) and scroll them
 
             bg.scroll += game_speed
             if bg.scroll > HEIGHT:
@@ -195,7 +202,7 @@ if __name__ == "__main__":
             enemies_gr.draw(screen)  # here code displays our enemies
             enemies_gr.update(HEIGHT, game_speed)  # here program moves them
 
-            actual_score = display_score()
+
             screen.blit(actual_score, (WIDTH // 35, 0))
 
             player_group.draw(screen)
