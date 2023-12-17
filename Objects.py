@@ -1,5 +1,8 @@
 from math import ceil
 import pygame
+from random import randint
+
+import self as self
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -25,11 +28,28 @@ class Enemy(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, width, height):
         pygame.sprite.Sprite.__init__(self)
+        self.i = int(0)
+        self.images_pack = [
+            pygame.transform.scale(pygame.image.load(f"images/player/bear/{i}.png").convert_alpha(),
+                                   (width // 10, width // 7)) for i in range(3)]
+        self.pack_len = len(self.images_pack) - 1
+        self.image = self.images_pack[0]
+        self.rect = self.image.get_rect(centerx=width // 2, bottom=height - self.image.get_height() * 2.5)
+        self.rect_begin = (width // 2 - (self.rect.width // 2), height - self.image.get_height() * 2.5)
 
-        self.image = pygame.transform.scale(pygame.image.load("images/bear3.png").convert_alpha(), (width // 10, width // 7))
-        self.rect = self.image.get_rect(centerx=width // 2, bottom=height - self.image.get_height() * 2)
-        self.rect_begin = width // 2 - (self.rect.width // 2)
         self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self, *args):
+        if self.rect.y < args[0]:
+            self.rect.y += args[1]
+
+    def animatePlayer(self):
+
+        self.image = self.images_pack[self.i]
+        if self.i == self.pack_len:
+            self.i = 0
+        else:
+            self.i += 1
 
 
 class Background:
@@ -40,13 +60,32 @@ class Background:
         self.scroll = 0  # variable which scroll our background
 
 
+class Fire(pygame.sprite.Sprite):
+    def __init__(self, width, height):
+        pygame.sprite.Sprite.__init__(self)
+        self.random_index = None
+        self.image_pack = [pygame.transform.scale(pygame.image.load(f"images/fire1/{i}.png"), (width, height // 8)) for
+                           i in range(6)]
+        self.image = pygame.transform.scale(pygame.image.load(f"images/fire1/{0}.png"), (width, height // 8))
+
+        self.rect = self.image.get_rect(bottomleft=(0, height))
+        self.rect.width = width
+        self.rect.height = height // 8
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def animateFire(self, height):
+        self.random_index = randint(0, 5)
+        self.image = self.image_pack[self.random_index]
+        self.rect = self.image.get_rect(bottomleft=(0, height))
+
+
 class Button:
-    def __init__(self, y, width, height, name):
-        self.image = pygame.transform.scale(pygame.image.load(f"images/buttons/{name}"), (width // 6, height // 15))
+    def __init__(self, y, width, height, name, size):
+        self.image = pygame.transform.scale(pygame.image.load(f"images/buttons/{name}"), (width // size, height // size//2.5))
 
         self.rect = self.image.get_rect(center=(0, y))
 
-        self.rect.x = width//2 - self.image.get_width()//2
+        self.rect.x = width // 2 - self.image.get_width() // 2
 
     def draws(self, *args):
         # draw button
@@ -60,8 +99,8 @@ class Button:
         action = False
         # check if mouse is over the button and click it
         if self.rect.collidepoint(pos):
-            self.rect.width = args[0]//4
-            self.rect.height = args[1]//10
+            self.rect.width = args[0] // 4
+            self.rect.height = args[1] // 10
             if pygame.mouse.get_pressed()[0] == 1:
                 action = True
         return action
