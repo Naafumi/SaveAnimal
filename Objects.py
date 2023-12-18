@@ -7,7 +7,7 @@ pygame.init()
 
 class Enemy:
     class staticEnemy(pygame.sprite.Sprite):
-        def __init__(self, x, surface, group, ):
+        def __init__(self, x, surface, group):
             pygame.sprite.Sprite.__init__(self)
 
             self.image = surface
@@ -27,15 +27,13 @@ class Enemy:
                 self.remove()
 
     class animaticEnemy(pygame.sprite.Sprite):
-        def __init__(self, x, surface, group, width):
+        def __init__(self, x, surfaces, group):
             pygame.sprite.Sprite.__init__(self)
-            self.images_pack = [
-                pygame.transform.scale(pygame.image.load(f"images/enemies/fire/{i}.png").convert_alpha(),
-                                       (width // 10, width // 7)) for i in range(1, 5)]
+            self.images_pack = surfaces
             self.pack_len = len(self.images_pack) - 1
             self.i = 0
 
-            self.image = surface
+            self.image = surfaces[0]
             self.height = self.image.get_height()
             self.rect = self.image.get_rect(center=(x, -self.height))
             self.mask = pygame.mask.from_surface(self.image)
@@ -49,13 +47,21 @@ class Enemy:
             else:
                 self.i += 1
 
-        def update(self, *args):
-            if self.rect.y < args[0]:
+        def update(self, height, game_speed, x=0):
+            if x == 0:
+                if self.rect.y < height:
+                    self.rect.y += game_speed
+                else:
+                    self.kill()
+                    self.remove()
 
-                self.rect.y += args[1]
-            else:
-                self.kill()
-                self.remove()
+            if x == 1:
+                self.image = self.images_pack[self.i]
+                if self.i == self.pack_len:
+                    self.i = 0
+                else:
+                    self.i += 1
+                x = 0
 
 
 class Player(pygame.sprite.Sprite):

@@ -11,10 +11,10 @@ def createEnemy(static_group, static_surfaces, animate_group, animate_surfaces, 
 
         return Enemy.staticEnemy(random_x, static_surfaces[random_index], static_group)
     if stat_or_anim == 1:
-        random_index = randint(0, len(animate_surfaces) - 1)
+
         random_x = randint(20, width - 20)
 
-        return Enemy.animaticEnemy(random_x, animate_surfaces[random_index], animate_group, width).animateEnemy()
+        return Enemy.animaticEnemy(random_x, animate_surfaces, animate_group)
 
 
 

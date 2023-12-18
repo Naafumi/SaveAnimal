@@ -88,7 +88,7 @@ if __name__ == "__main__":
             for index in enemies_images[path]:
                 animatic_enemies_surfaces.append(
                     pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
-                                           (WIDTH // 12, HEIGHT // 10)))
+                                           (WIDTH // 16, HEIGHT // 14)))
 
 static_enemies_group = pygame.sprite.Group()
 animatic_enemies_group = pygame.sprite.Group()
@@ -104,7 +104,7 @@ ANIMATE_PLAYER = pygame.USEREVENT + 2
 pygame.time.set_timer(ANIMATE_PLAYER, game_speed * 100)
 
 ANIMATE_FIRE = pygame.USEREVENT + 3
-pygame.time.set_timer(ANIMATE_FIRE, 250)
+pygame.time.set_timer(ANIMATE_FIRE, 200)
 
 ANIMATE_ENEMIES = pygame.USEREVENT + 4
 pygame.time.set_timer(ANIMATE_ENEMIES, 250)
@@ -206,12 +206,15 @@ if __name__ == "__main__":
 
                     speed_create = 1500 // (game_speed // begin_game_speed)
                     pygame.time.set_timer(CREATE_ENEMY, speed_create)
-                if event.type == ANIMATE_PLAYER:
+                if event.type == ANIMATE_PLAYER and playerNotHit:
                     player.animatePlayer()
 
 
                 if event.type == ANIMATE_FIRE:
                     fire.animateFire(HEIGHT)
+
+                if event.type == ANIMATE_ENEMIES:
+                    animatic_enemies_group.update(HEIGHT, game_speed, x=1)  # here program moves them
 
 
 
@@ -220,11 +223,17 @@ if __name__ == "__main__":
 
         if game_active:
             actual_score = display_score()
-            if collideRectEnemy(player, static_enemies_group) or collideRectEnemy(player, animatic_enemies_group):
+            if collideRectEnemy(player, static_enemies_group):
                 playerNotHit = False
                 player.update(HEIGHT, game_speed)
 
             game_active, score_board = collideRectFire(player, fire_group)
+
+            if collideRectEnemy(player, animatic_enemies_group):
+                game_active, score_board = collideRectFire(player, animatic_enemies_group)
+
+
+
 
             # if game is over code draw background for fast loading score board and passes the rest of game code
             if not game_active:
