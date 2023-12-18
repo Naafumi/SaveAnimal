@@ -55,7 +55,9 @@ enemies_images = {
     'oil': [f"{index}.png" for index in [1, 2, 3, 4]],
     'cars': [f"{index}.png" for index in [1, 2, 3, 4]],
     'fire': [f"{index}.png" for index in [1, 2, 3, 4]]}
-enemies_surfaces = []
+
+static_enemies_surfaces = []
+animatic_enemies_surfaces = []
 fire_surfaces = []
 
 fire = Fire(WIDTH, HEIGHT)
@@ -63,10 +65,11 @@ fire_group = pygame.sprite.Group()
 fire_group.add(fire)
 
 if __name__ == "__main__":
+
     for path in enemies_images:
         if path == 'oil':
             for index in enemies_images[path]:
-                enemies_surfaces.append(
+                static_enemies_surfaces.append(
                     pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                            (WIDTH // 9, HEIGHT // 13)))
 
@@ -74,20 +77,21 @@ if __name__ == "__main__":
         if path == 'cars':
             for index in enemies_images[path]:
                 if index == '3.png' or index == '4.png':
-                    enemies_surfaces.append(
+                    static_enemies_surfaces.append(
                         pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                                (WIDTH // 10, HEIGHT // 5)))
                 else:
-                    enemies_surfaces.append(
+                    static_enemies_surfaces.append(
                         pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                                (WIDTH // 4, HEIGHT // 9)))
         if path == 'fire':
             for index in enemies_images[path]:
-                fire_surfaces.append(
+                animatic_enemies_surfaces.append(
                     pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                            (WIDTH // 12, HEIGHT // 10)))
 
-enemies_gr = pygame.sprite.Group()
+static_enemies_group = pygame.sprite.Group()
+animatic_enemies_group = pygame.sprite.Group()
 
 # EVENTS
 CREATE_ENEMY = pygame.USEREVENT
@@ -102,8 +106,8 @@ pygame.time.set_timer(ANIMATE_PLAYER, game_speed * 100)
 ANIMATE_FIRE = pygame.USEREVENT + 3
 pygame.time.set_timer(ANIMATE_FIRE, 250)
 
-ANIMATE_ENEMY_FIRE = pygame.USEREVENT + 4
-pygame.time.set_timer(ANIMATE_ENEMY_FIRE, 250)
+ANIMATE_ENEMIES = pygame.USEREVENT + 4
+pygame.time.set_timer(ANIMATE_ENEMIES, 250)
 
 
 bg = Background(WIDTH, HEIGHT)
@@ -124,7 +128,8 @@ def display_score():
 
 def reset_game():
     # clear enemies
-    enemies_gr.empty()
+    static_enemies_group.empty()
+    animatic_enemies_group.empty()
 
     # reset score
     global score
@@ -194,7 +199,7 @@ if __name__ == "__main__":
                 # here we check all our events and if we have some event we do it
 
                 if event.type == CREATE_ENEMY:
-                    enemy = createEnemy(enemies_gr, enemies_surfaces, fire_surfaces, WIDTH)
+                    createEnemy(static_enemies_group, static_enemies_surfaces, animatic_enemies_group, animatic_enemies_surfaces, WIDTH)
 
                 if event.type == CHANGE_SPEED:
                     game_speed += 1
@@ -208,13 +213,14 @@ if __name__ == "__main__":
                 if event.type == ANIMATE_FIRE:
                     fire.animateFire(HEIGHT)
 
-                if event.type == ANIMATE_ENEMY_FIRE:
-                    pass
+
+
+
 
 
         if game_active:
             actual_score = display_score()
-            if collideRectEnemy(player, enemies_gr):
+            if collideRectEnemy(player, static_enemies_group) or collideRectEnemy(player, animatic_enemies_group):
                 playerNotHit = False
                 player.update(HEIGHT, game_speed)
 
@@ -257,8 +263,11 @@ if __name__ == "__main__":
             if bg.scroll > HEIGHT:
                 bg.scroll = 0
 
-            enemies_gr.draw(screen)  # here code displays our enemies
-            enemies_gr.update(HEIGHT, game_speed)  # here program moves them
+            static_enemies_group.draw(screen)  # here code displays our enemies
+            static_enemies_group.update(HEIGHT, game_speed)  # here program moves them
+
+            animatic_enemies_group.draw(screen)  # here code displays our enemies
+            animatic_enemies_group.update(HEIGHT, game_speed)  # here program moves them
 
             screen.blit(actual_score, (WIDTH // 35, 0))
 
