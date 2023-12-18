@@ -1,6 +1,9 @@
 import random
+from typing import List
 
 import pygame
+from pygame import Surface, SurfaceType
+
 from Objects import Player, Background, Button, Fire
 from Scripts import createEnemy, collideRectEnemy, collideRectFire
 
@@ -24,7 +27,10 @@ BLUE = (0, 50, 255)
 
 # fonts
 
-font_score = pygame.font.Font('fonts/pixel.ttf', WIDTH // 20)
+font_small = pygame.font.Font('fonts/pixel.ttf', WIDTH // 20)
+font_big = pygame.font.Font('fonts/pixel.ttf', WIDTH // 15)
+
+
 
 screen = pygame.display.set_mode(SCREEN_SIZE)  # provide size of screen
 pygame.display.set_caption("Save Animal")  # Game's name
@@ -47,8 +53,10 @@ player_group.add(player)
 # create enemies and group for function which generate them in game
 enemies_images = {
     'oil': [f"{index}.png" for index in [1, 2, 3, 4]],
-    'cars': [f"{index}.png" for index in [1, 2, 3, 4]]}
+    'cars': [f"{index}.png" for index in [1, 2, 3, 4]],
+    'fire': [f"{index}.png" for index in [1, 2, 3, 4]]}
 enemies_surfaces = []
+fire_surfaces = []
 
 fire = Fire(WIDTH, HEIGHT)
 fire_group = pygame.sprite.Group()
@@ -62,7 +70,7 @@ if __name__ == "__main__":
                     pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                            (WIDTH // 9, HEIGHT // 13)))
 
-    for path in enemies_images:
+
         if path == 'cars':
             for index in enemies_images[path]:
                 if index == '3.png' or index == '4.png':
@@ -73,6 +81,11 @@ if __name__ == "__main__":
                     enemies_surfaces.append(
                         pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                                (WIDTH // 4, HEIGHT // 9)))
+        if path == 'fire':
+            for index in enemies_images[path]:
+                fire_surfaces.append(
+                    pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+                                           (WIDTH // 12, HEIGHT // 10)))
 
 enemies_gr = pygame.sprite.Group()
 
@@ -89,6 +102,9 @@ pygame.time.set_timer(ANIMATE_PLAYER, game_speed * 100)
 ANIMATE_FIRE = pygame.USEREVENT + 3
 pygame.time.set_timer(ANIMATE_FIRE, 250)
 
+ANIMATE_ENEMY_FIRE = pygame.USEREVENT + 4
+pygame.time.set_timer(ANIMATE_FIRE, 250)
+
 bg = Background(WIDTH, HEIGHT)
 
 but_restart = Button((HEIGHT // 2 - HEIGHT // 10), WIDTH, HEIGHT, "restart.png", 5)
@@ -101,7 +117,7 @@ def display_score():
     global score
     score += game_speed // 3
 
-    text_score = font_score.render(f"score: {score}", False, WHITE)
+    text_score = font_small.render(f"score: {score}", False, WHITE)
     return text_score
 
 
@@ -146,9 +162,15 @@ if __name__ == "__main__":
                 pygame.quit()
                 exit()
             if start_game:
-                screen.fill((10, 200, 90))
-                start_text = font_score.render("Welcome to the real World!", False, WHITE)
-                screen.blit(start_text, (WIDTH // 2 - start_text.get_width() // 2, HEIGHT // 8))
+                start_img = pygame.transform.scale(pygame.image.load("images/start menu/2.png"), (WIDTH,  HEIGHT))
+                screen.fill((170, 40, 40))
+                screen.blit(start_img, (0, 0))
+                start_text: list[Surface | SurfaceType] = [font_big.render("Welcome", False, WHITE),
+                                                           font_big.render("to the real World!", False, WHITE)]
+
+                screen.blit(start_text[0], (WIDTH // 2 - start_text[0].get_width() // 2, HEIGHT // 8))
+                screen.blit(start_text[1], (WIDTH // 2 - start_text[1].get_width() // 2, HEIGHT // 8 + start_text[1].get_height()))
+
                 if but_play.draws(WIDTH, HEIGHT):
                     reset_game()
                 pygame.display.update()
@@ -171,7 +193,7 @@ if __name__ == "__main__":
                 # here we check all our events and if we have some event we do it
 
                 if event.type == CREATE_ENEMY:
-                    createEnemy(enemies_gr, enemies_images, enemies_surfaces, WIDTH)
+                    enemy = createEnemy(enemies_gr, enemies_surfaces, fire_surfaces, WIDTH)
 
                 if event.type == CHANGE_SPEED:
                     game_speed += 1
@@ -181,8 +203,11 @@ if __name__ == "__main__":
                 if event.type == ANIMATE_PLAYER:
                     player.animatePlayer()
 
+
                 if event.type == ANIMATE_FIRE:
                     fire.animateFire(HEIGHT)
+                if event.type == ANIMATE_ENEMY_FIRE:
+                    enemies_gr.
 
         if game_active:
             actual_score = display_score()

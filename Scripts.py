@@ -3,14 +3,13 @@ from random import randint
 import pygame
 
 
-def createEnemy(group, enemies_images, enemies_surfaces, width):
-    random_index = randint(0, len(enemies_surfaces) - 1)
+def createEnemy(group, enemies_surfaces, fire_surfaces, width):
+    fireNot = randint(0, 1)
+    print(fireNot)
+    random_index = randint(0, len(enemies_surfaces) - 1 )
     random_x = randint(20, width - 20)
 
-    return Enemy(random_x, enemies_surfaces[random_index], group)
-
-
-
+    return Enemy(random_x, enemies_surfaces[random_index], group, fire_surfaces, fireNot)
 
 
 def collideRectEnemy(player, enemies_gr):
@@ -18,6 +17,7 @@ def collideRectEnemy(player, enemies_gr):
         return True
     else:
         return False
+
 
 def collideRectFire(player, fire_gr):
     if pygame.sprite.spritecollide(player, fire_gr, False, pygame.sprite.collide_mask):

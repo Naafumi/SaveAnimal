@@ -7,14 +7,30 @@ import self as self
 
 class Enemy(pygame.sprite.Sprite):
 
-    def __init__(self, x, surface, group):
+    def __init__(self, x, surface, group, fire_surfaces, fireNot):
         pygame.sprite.Sprite.__init__(self)
+        self.i = 0
+        self.fireNot = fireNot
+        self.fire_surfaces = fire_surfaces
+        self.len_pack = len(fire_surfaces) - 1
+
         self.image = surface
+        if self.fireNot == 1:
+            self.image = self.fire_surfaces[self.i]
+        else:
+            self.image = surface
         self.height = self.image.get_height()
         self.rect = self.image.get_rect(center=(x, -self.height))
         self.mask = pygame.mask.from_surface(self.image)
 
         self.add(group)
+
+    def update_img(self):
+
+        if self.fireNot == 1:
+            self.image = self.fire_surfaces[self.i]
+            if self.i == self.len_pack:
+                self.i = 0
 
     def update(self, *args):
         if self.rect.y < args[0]:
@@ -23,6 +39,9 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self.kill()
             self.remove()
+
+
+
 
 
 class Player(pygame.sprite.Sprite):
@@ -34,8 +53,8 @@ class Player(pygame.sprite.Sprite):
                                    (width // 10, width // 7)) for i in range(3)]
         self.pack_len = len(self.images_pack) - 1
         self.image = self.images_pack[0]
-        self.rect = self.image.get_rect(centerx=width // 2, bottom=height - self.image.get_height() * 2.5)
-        self.rect_begin = (width // 2 - (self.rect.width // 2), height - self.image.get_height() * 2.5)
+        self.rect = self.image.get_rect(centerx=width // 2, bottom=height - self.image.get_height() * 3.5)
+        self.rect_begin = (width // 2 - (self.rect.width // 2), height - self.image.get_height() * 3.5)
 
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -54,7 +73,7 @@ class Player(pygame.sprite.Sprite):
 
 class Background:
     def __init__(self, width, height):
-        self.image = pygame.transform.scale(pygame.image.load("images/bg2.png").convert(), (width, height))
+        self.image = pygame.transform.scale(pygame.image.load("images/background/3.png").convert(), (width, height))
         self.tiles = ceil(height / self.image.get_height()) + 1  # tiles make endless background scrolling ,
         self.list_bg = [self.image for x in range(self.tiles)]
         self.scroll = 0  # variable which scroll our background
@@ -64,9 +83,9 @@ class Fire(pygame.sprite.Sprite):
     def __init__(self, width, height):
         pygame.sprite.Sprite.__init__(self)
         self.random_index = None
-        self.image_pack = [pygame.transform.scale(pygame.image.load(f"images/fire1/{i}.png"), (width, height // 8)) for
+        self.image_pack = [pygame.transform.scale(pygame.image.load(f"images/fire/{i}.png"), (width, height // 8)) for
                            i in range(6)]
-        self.image = pygame.transform.scale(pygame.image.load(f"images/fire1/{0}.png"), (width, height // 8))
+        self.image = pygame.transform.scale(pygame.image.load(f"images/fire/{0}.png"), (width, height // 8))
 
         self.rect = self.image.get_rect(bottomleft=(0, height))
         self.rect.width = width
@@ -81,7 +100,8 @@ class Fire(pygame.sprite.Sprite):
 
 class Button:
     def __init__(self, y, width, height, name, size):
-        self.image = pygame.transform.scale(pygame.image.load(f"images/buttons/{name}"), (width // size, height // size//2.5))
+        self.image = pygame.transform.scale(pygame.image.load(f"images/buttons/{name}"),
+                                            (width // size, height // size // 2.5))
 
         self.rect = self.image.get_rect(center=(0, y))
 
