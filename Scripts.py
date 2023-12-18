@@ -5,7 +5,7 @@ import pygame
 
 def createEnemy(group, enemies_surfaces, fire_surfaces, width):
     fireNot = randint(0, 1)
-    print(fireNot)
+
     random_index = randint(0, len(enemies_surfaces) - 1 )
     random_x = randint(20, width - 20)
 

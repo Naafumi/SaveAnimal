@@ -2,8 +2,8 @@ from math import ceil
 import pygame
 from random import randint
 
-import self as self
 
+pygame.init()
 
 class Enemy(pygame.sprite.Sprite):
 
@@ -25,21 +25,28 @@ class Enemy(pygame.sprite.Sprite):
 
         self.add(group)
 
-    def update_img(self):
-
-        if self.fireNot == 1:
-            self.image = self.fire_surfaces[self.i]
-            if self.i == self.len_pack:
-                self.i = 0
 
     def update(self, *args):
+
+
+        if self.fireNot == 1:
+            ANIMATE_ENEMY_FIRE = pygame.USEREVENT + 5
+            pygame.time.set_timer(ANIMATE_ENEMY_FIRE, 250)
+            for event in pygame.event.get():
+                print(ANIMATE_ENEMY_FIRE, "==", event.type)
+
+                if event.type == ANIMATE_ENEMY_FIRE:
+                    print('8')
+
+                    self.image = self.fire_surfaces[self.i]
+                    if self.i == self.len_pack:
+                        self.i = 0
         if self.rect.y < args[0]:
 
             self.rect.y += args[1]
         else:
             self.kill()
             self.remove()
-
 
 
 

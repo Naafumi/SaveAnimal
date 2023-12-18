@@ -103,7 +103,8 @@ ANIMATE_FIRE = pygame.USEREVENT + 3
 pygame.time.set_timer(ANIMATE_FIRE, 250)
 
 ANIMATE_ENEMY_FIRE = pygame.USEREVENT + 4
-pygame.time.set_timer(ANIMATE_FIRE, 250)
+pygame.time.set_timer(ANIMATE_ENEMY_FIRE, 250)
+
 
 bg = Background(WIDTH, HEIGHT)
 
@@ -206,8 +207,10 @@ if __name__ == "__main__":
 
                 if event.type == ANIMATE_FIRE:
                     fire.animateFire(HEIGHT)
+
                 if event.type == ANIMATE_ENEMY_FIRE:
-                    enemies_gr.
+                    pass
+
 
         if game_active:
             actual_score = display_score()
