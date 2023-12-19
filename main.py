@@ -4,7 +4,7 @@ from typing import List
 import pygame
 from pygame import Surface, SurfaceType
 
-from Objects import Player, Background, Button, Fire
+from Objects import Player, Background, Button, Fire, Text
 from Scripts import createEnemy, collideRectEnemy, collideRectFire
 
 pygame.init()
@@ -14,9 +14,12 @@ score_board = False
 playerNotHit = True
 start_game = True
 
+
+
 # size of our screen
 WIDTH = 700
 HEIGHT = 800
+
 
 SCREEN_SIZE = (WIDTH, HEIGHT)
 
@@ -25,11 +28,10 @@ COLOR = (0, 140, 120)
 WHITE = (255, 255, 255)
 BLUE = (0, 50, 255)
 
-# fonts
+set_width = Text(WIDTH)
 
-font_small = pygame.font.Font('fonts/pixel.ttf', WIDTH // 20)
-font_big = pygame.font.Font('fonts/pixel.ttf', WIDTH // 15)
-
+score_board_image = pygame.transform.scale(pygame.image.load("images/scoreboard/bearfired.png"),
+                                           (WIDTH // 2, HEIGHT // 2))
 
 
 screen = pygame.display.set_mode(SCREEN_SIZE)  # provide size of screen
@@ -45,6 +47,8 @@ game_speed = 3
 speed_create_begin = 3000
 speed_create = 3000
 score = 0
+
+set_width(WIDTH)
 
 player = Player(WIDTH, HEIGHT)
 player_group = pygame.sprite.Group()
@@ -66,6 +70,7 @@ fire_group.add(fire)
 
 if __name__ == "__main__":
 
+#create surfaces from our images
     for path in enemies_images:
         if path == 'oil':
             for index in enemies_images[path]:
@@ -104,7 +109,7 @@ ANIMATE_PLAYER = pygame.USEREVENT + 2
 pygame.time.set_timer(ANIMATE_PLAYER, game_speed * 100)
 
 ANIMATE_FIRE = pygame.USEREVENT + 3
-pygame.time.set_timer(ANIMATE_FIRE, 200)
+pygame.time.set_timer(ANIMATE_FIRE, 150)
 
 ANIMATE_ENEMIES = pygame.USEREVENT + 4
 pygame.time.set_timer(ANIMATE_ENEMIES, 250)
@@ -112,8 +117,8 @@ pygame.time.set_timer(ANIMATE_ENEMIES, 250)
 
 bg = Background(WIDTH, HEIGHT)
 
-but_restart = Button((HEIGHT // 2 - HEIGHT // 10), WIDTH, HEIGHT, "restart.png", 5)
-but_quit = Button((but_restart.rect.height + HEIGHT // 2), WIDTH, HEIGHT, "exit.png", 5)
+but_restart = Button((HEIGHT // 2.5 - HEIGHT // 8), WIDTH, HEIGHT, "restart.png", 5)
+but_quit = Button((HEIGHT // 2.5), WIDTH, HEIGHT, "exit.png", 5)
 but_play = Button(HEIGHT // 2, WIDTH, HEIGHT, "play.png", 4)
 
 
@@ -122,7 +127,7 @@ def display_score():
     global score
     score += game_speed // 3
 
-    text_score = font_small.render(f"score: {score}", False, WHITE)
+    text_score = Text.pixel_font_medium.render(f"score: {score}", False, WHITE)
     return text_score
 
 
@@ -156,7 +161,7 @@ def reset_game():
     start_game = False
 
 
-if __name__ == "__main__":
+
     while True:
         # code read pressed keys from keyboard
 
@@ -167,33 +172,42 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
+            #START MENU
             if start_game:
                 start_img = pygame.transform.scale(pygame.image.load("images/start menu/2.png"), (WIDTH,  HEIGHT))
-                screen.fill((170, 40, 40))
                 screen.blit(start_img, (0, 0))
-                start_text: list[Surface | SurfaceType] = [font_big.render("Welcome", False, WHITE),
-                                                           font_big.render("to the real World!", False, WHITE)]
+                start_text: list[Surface | SurfaceType] = [Text.Font.pixel_big.render("Welcome", False, WHITE),
+                                                           Text.Font.pixel_big.render("to the real World!", False, WHITE)]
 
                 screen.blit(start_text[0], (WIDTH // 2 - start_text[0].get_width() // 2, HEIGHT // 8))
                 screen.blit(start_text[1], (WIDTH // 2 - start_text[1].get_width() // 2, HEIGHT // 8 + start_text[1].get_height()))
-
-                if but_play.draws(WIDTH, HEIGHT):
+                screen.blit(Text.scoreboard.text_press, (WIDTH // 2 - Text.scoreboard.text_press.get_width() // 2, HEIGHT // 2 - HEIGHT // 10))
+                if but_play.draws(WIDTH, HEIGHT, keys, res=True):
                     reset_game()
-                pygame.display.update()
 
+                pygame.display.update()
+            #SCOREBOARD
             if score_board:
                 # if our game is paused code activate end background
-                screen.fill((90, 130, 255))
+                screen.fill((100, 31, 21))
+
                 global actual_score
-                screen.blit(actual_score, (WIDTH // 2 - actual_score.get_width() // 2, HEIGHT // 15))
+
+                screen.blit(Text.scoreboard.text_died, (WIDTH // 2 - Text.scoreboard.text_died.get_width() // 2, HEIGHT // 15))
+                screen.blit(actual_score, (WIDTH // 2 - actual_score.get_width() // 2, HEIGHT // 12))
+                screen.blit(score_board_image, (WIDTH//2-score_board_image.get_width()//2, HEIGHT//2))
+                screen.blit(Text.scoreboard.text_press, (WIDTH // 2 - Text.scoreboard.text_press.get_width() // 2, HEIGHT-HEIGHT//30))
+
                 # draw buttons and check whether are pressed
-                if but_restart.draws(WIDTH, HEIGHT):
+                if but_restart.draws(WIDTH, HEIGHT, keys, res=True):
                     reset_game()
                 if but_quit.draws(WIDTH, HEIGHT):
                     pygame.quit()
                     exit()
                 pygame.display.update()
 
+            #GAME IS BEING PLAYED
             if game_active:
 
                 # here we check all our events and if we have some event we do it
@@ -208,7 +222,6 @@ if __name__ == "__main__":
                     pygame.time.set_timer(CREATE_ENEMY, speed_create)
                 if event.type == ANIMATE_PLAYER and playerNotHit:
                     player.animatePlayer()
-
 
                 if event.type == ANIMATE_FIRE:
                     fire.animateFire(HEIGHT)
@@ -237,17 +250,9 @@ if __name__ == "__main__":
 
             # if game is over code draw background for fast loading score board and passes the rest of game code
             if not game_active:
-                screen.fill((90, 130, 255))
+                screen.fill((100, 31, 21))
 
-                screen.blit(actual_score, (WIDTH // 2 - actual_score.get_width() // 2, HEIGHT // 15))
 
-                if but_restart.draws(WIDTH, HEIGHT):
-                    reset_game()
-                if but_quit.draws(WIDTH, HEIGHT):
-                    pygame.quit()
-                    exit()
-                pygame.display.update()
-                continue
 
             # checks player movement
             if pygame.KEYDOWN and playerNotHit:
