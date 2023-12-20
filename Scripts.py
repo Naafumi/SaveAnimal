@@ -1,9 +1,7 @@
 
 from random import randint
 import pygame
-if __name__ != "Objects.py":
-    from Objects import Enemy
-
+from Objects import Enemy
 
 def createEnemy(static_group, static_surfaces, animate_group, animate_surfaces, width):
     stat_or_anim = randint(0, 1)

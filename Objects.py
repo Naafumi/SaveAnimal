@@ -2,7 +2,6 @@ from math import ceil
 import pygame
 from random import randint
 
-
 pygame.init()
 
 
@@ -119,34 +118,19 @@ class Fire(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(bottomleft=(0, height))
 
 
-
-
 class Text:
-    # fonts
     def __init__(self, width):
-        self.set_width(width)
-
-    def get_width(self):
-        return self.__width
-    def set_width(self, width):
-        self.__width = width
-
-
+        self.width = width
+    width = 700
+    pixel_small = pygame.font.Font('fonts/pixel.ttf', width // 45)
+    pixel_medium = pygame.font.Font('fonts/pixel.ttf', width // 20)
+    pixel_big = pygame.font.Font('fonts/pixel.ttf', width // 15)
+    metal_big = pygame.font.Font('fonts/Faceless.ttf', width // 8)
 
 
-
-        class Font:
-            WIDTH = get_width()
-
-            pixel_small = pygame.font.Font('fonts/pixel.ttf', WIDTH // 45)
-            pixel_medium = pygame.font.Font('fonts/pixel.ttf', WIDTH // 20)
-            pixel_big = pygame.font.Font('fonts/pixel.ttf', WIDTH // 15)
-            metal_big = pygame.font.Font('fonts/Faceless.ttf', WIDTH // 8)
-
-        class scoreboard:
-            global pixel_big, pixel_small
-            text_died = pixel_big.render("YOU DIED", False, (255, 0, 0))
-            text_press = pixel_small.render("press space to restart", False, (200, 200, 200))
+class Scoreboard(Text):
+    text_died = Text.pixel_big.render("YOU DIED", False, (255, 0, 0))
+    text_press = Text.pixel_small.render("press space to restart", False, (200, 200, 200))
 
 
 class Button:

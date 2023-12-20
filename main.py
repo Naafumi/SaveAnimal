@@ -1,10 +1,10 @@
 import random
-from typing import List
+
 
 import pygame
 from pygame import Surface, SurfaceType
 
-from Objects import Player, Background, Button, Fire, Text
+from Objects import Player, Background, Button, Fire,  Scoreboard
 from Scripts import createEnemy, collideRectEnemy, collideRectFire
 
 pygame.init()
@@ -13,7 +13,6 @@ game_active = False
 score_board = False
 playerNotHit = True
 start_game = True
-
 
 
 # size of our screen
@@ -28,7 +27,7 @@ COLOR = (0, 140, 120)
 WHITE = (255, 255, 255)
 BLUE = (0, 50, 255)
 
-set_width = Text(WIDTH)
+
 
 score_board_image = pygame.transform.scale(pygame.image.load("images/scoreboard/bearfired.png"),
                                            (WIDTH // 2, HEIGHT // 2))
@@ -47,8 +46,11 @@ game_speed = 3
 speed_create_begin = 3000
 speed_create = 3000
 score = 0
+text = Scoreboard(WIDTH)
 
-set_width(WIDTH)
+print(text.text_press)
+
+
 
 player = Player(WIDTH, HEIGHT)
 player_group = pygame.sprite.Group()
@@ -127,7 +129,7 @@ def display_score():
     global score
     score += game_speed // 3
 
-    text_score = Text.pixel_font_medium.render(f"score: {score}", False, WHITE)
+    text_score = text.render(f"score: {score}", False, WHITE)
     return text_score
 
 
@@ -177,8 +179,8 @@ def reset_game():
             if start_game:
                 start_img = pygame.transform.scale(pygame.image.load("images/start menu/2.png"), (WIDTH,  HEIGHT))
                 screen.blit(start_img, (0, 0))
-                start_text: list[Surface | SurfaceType] = [Text.Font.pixel_big.render("Welcome", False, WHITE),
-                                                           Text.Font.pixel_big.render("to the real World!", False, WHITE)]
+                start_text: list[Surface | SurfaceType] = [Text.Text.pixel_big.render("Welcome", False, WHITE),
+                                                           Text.Text.pixel_big.render("to the real World!", False, WHITE)]
 
                 screen.blit(start_text[0], (WIDTH // 2 - start_text[0].get_width() // 2, HEIGHT // 8))
                 screen.blit(start_text[1], (WIDTH // 2 - start_text[1].get_width() // 2, HEIGHT // 8 + start_text[1].get_height()))
