@@ -119,18 +119,24 @@ class Fire(pygame.sprite.Sprite):
 
 
 class Text:
-    def __init__(self, width):
-        self.width = width
+
     width = 700
+    WHITE = (255, 255, 255)
     pixel_small = pygame.font.Font('fonts/pixel.ttf', width // 45)
     pixel_medium = pygame.font.Font('fonts/pixel.ttf', width // 20)
     pixel_big = pygame.font.Font('fonts/pixel.ttf', width // 15)
     metal_big = pygame.font.Font('fonts/Faceless.ttf', width // 8)
 
 
-class Scoreboard(Text):
-    text_died = Text.pixel_big.render("YOU DIED", False, (255, 0, 0))
+class RestartBoard(Text):
+
+    text_died = Text.metal_big.render("YOU DIED", False, (255, 0, 0))
     text_press = Text.pixel_small.render("press space to restart", False, (200, 200, 200))
+
+
+class StartMenu(Text):
+    start_text = [Text.pixel_big.render("Welcome", False, Text.WHITE),
+                  Text.pixel_big.render("to the real World!", False, Text.WHITE)]
 
 
 class Button:

@@ -1,10 +1,8 @@
-import random
-
 
 import pygame
-from pygame import Surface, SurfaceType
 
-from Objects import Player, Background, Button, Fire,  Scoreboard
+
+from Objects import Player, Background, Button, Fire,  RestartBoard, StartMenu, Text
 from Scripts import createEnemy, collideRectEnemy, collideRectFire
 
 pygame.init()
@@ -46,9 +44,6 @@ game_speed = 3
 speed_create_begin = 3000
 speed_create = 3000
 score = 0
-text = Scoreboard(WIDTH)
-
-print(text.text_press)
 
 
 
@@ -66,7 +61,7 @@ static_enemies_surfaces = []
 animatic_enemies_surfaces = []
 fire_surfaces = []
 
-fire = Fire(WIDTH, HEIGHT)
+fire: Fire = Fire(WIDTH, HEIGHT)
 fire_group = pygame.sprite.Group()
 fire_group.add(fire)
 
@@ -129,7 +124,7 @@ def display_score():
     global score
     score += game_speed // 3
 
-    text_score = text.render(f"score: {score}", False, WHITE)
+    text_score = Text.pixel_small.render(f"score: {score}", False, WHITE)
     return text_score
 
 
@@ -163,7 +158,7 @@ def reset_game():
     start_game = False
 
 
-
+if __name__ == "__main__":
     while True:
         # code read pressed keys from keyboard
 
@@ -179,12 +174,11 @@ def reset_game():
             if start_game:
                 start_img = pygame.transform.scale(pygame.image.load("images/start menu/2.png"), (WIDTH,  HEIGHT))
                 screen.blit(start_img, (0, 0))
-                start_text: list[Surface | SurfaceType] = [Text.Text.pixel_big.render("Welcome", False, WHITE),
-                                                           Text.Text.pixel_big.render("to the real World!", False, WHITE)]
 
-                screen.blit(start_text[0], (WIDTH // 2 - start_text[0].get_width() // 2, HEIGHT // 8))
-                screen.blit(start_text[1], (WIDTH // 2 - start_text[1].get_width() // 2, HEIGHT // 8 + start_text[1].get_height()))
-                screen.blit(Text.scoreboard.text_press, (WIDTH // 2 - Text.scoreboard.text_press.get_width() // 2, HEIGHT // 2 - HEIGHT // 10))
+
+                screen.blit(StartMenu.start_text[0], (WIDTH // 2 - StartMenu.start_text[0].get_width() // 2, HEIGHT // 8))
+                screen.blit(StartMenu.start_text[1], (WIDTH // 2 - StartMenu.start_text[1].get_width() // 2, HEIGHT // 8 + StartMenu.start_text[1].get_height()))
+                screen.blit(RestartBoard.text_press, (WIDTH // 2 - RestartBoard.text_press.get_width() // 2, HEIGHT // 2 - HEIGHT // 10))
                 if but_play.draws(WIDTH, HEIGHT, keys, res=True):
                     reset_game()
 
@@ -196,10 +190,10 @@ def reset_game():
 
                 global actual_score
 
-                screen.blit(Text.scoreboard.text_died, (WIDTH // 2 - Text.scoreboard.text_died.get_width() // 2, HEIGHT // 15))
+                screen.blit(RestartBoard.text_died, (WIDTH // 2 - RestartBoard.text_died.get_width() // 2, HEIGHT // 15))
                 screen.blit(actual_score, (WIDTH // 2 - actual_score.get_width() // 2, HEIGHT // 12))
                 screen.blit(score_board_image, (WIDTH//2-score_board_image.get_width()//2, HEIGHT//2))
-                screen.blit(Text.scoreboard.text_press, (WIDTH // 2 - Text.scoreboard.text_press.get_width() // 2, HEIGHT-HEIGHT//30))
+                screen.blit(RestartBoard.text_press, (WIDTH // 2 - RestartBoard.text_press.get_width() // 2, HEIGHT-HEIGHT//30))
 
                 # draw buttons and check whether are pressed
                 if but_restart.draws(WIDTH, HEIGHT, keys, res=True):
