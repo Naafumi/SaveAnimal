@@ -26,6 +26,26 @@ class Enemy:
                 self.kill()
                 self.remove()
 
+    class staticKillerEnemy(pygame.sprite.Sprite):
+        def __init__(self, x, surface, group):
+            pygame.sprite.Sprite.__init__(self)
+
+            self.image = surface
+            self.height = self.image.get_height()
+            self.rect = self.image.get_rect(center=(x, -self.height))
+            self.mask = pygame.mask.from_surface(self.image)
+
+            self.add(group)
+
+        def update(self, *args):
+
+            if self.rect.y < args[0]:
+
+                self.rect.y += args[1]
+            else:
+                self.kill()
+                self.remove()
+
     class animaticEnemy(pygame.sprite.Sprite):
         def __init__(self, x, surfaces, group):
             pygame.sprite.Sprite.__init__(self)
@@ -118,21 +138,13 @@ class Fire(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(bottomleft=(0, height))
 
 
-class Width:
-    def __init__(self):
-        self.width = 300
-
-    def setWidth(self, wid):
-        self.width = wid
-        print(1)
-
-    def getWidth(self):
-        return self.width
 
 
-class Text:
 
+class StaticObjects:
     width = 700
+    height = 800
+
 
 
     WHITE = (255, 255, 255)
@@ -142,14 +154,14 @@ class Text:
     metal_big = pygame.font.Font('fonts/Faceless.ttf', width // 8)
 
 
-class RestartBoard(Text):
-    text_died = Text.metal_big.render("YOU DIED", False, (255, 0, 0))
-    text_press = Text.pixel_small.render("press space to restart", False, (200, 200, 200))
+class RestartBoard(StaticObjects):
+    text_died = StaticObjects.metal_big.render("YOU DIED", False, (255, 0, 0))
+    text_press = StaticObjects.pixel_small.render("press space to restart", False, (200, 200, 200))
+    image_bear_fired = pygame.transform.scale(pygame.image.load("images/scoreboard/bearfired.png"), (StaticObjects.width // 2, StaticObjects.height // 2))
 
-
-class StartMenu(Text):
-    start_text = [Text.pixel_big.render("Welcome", False, Text.WHITE),
-                  Text.pixel_big.render("to the real World!", False, Text.WHITE)]
+class StartMenu(StaticObjects):
+    start_text = [StaticObjects.pixel_big.render("Welcome", False, StaticObjects.WHITE),
+                  StaticObjects.pixel_big.render("to the real World!", False, StaticObjects.WHITE)]
 
 
 class Button:
