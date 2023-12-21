@@ -118,9 +118,23 @@ class Fire(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(bottomleft=(0, height))
 
 
+class Width:
+    def __init__(self):
+        self.width = 300
+
+    def setWidth(self, wid):
+        self.width = wid
+        print(1)
+
+    def getWidth(self):
+        return self.width
+
+
 class Text:
 
     width = 700
+
+
     WHITE = (255, 255, 255)
     pixel_small = pygame.font.Font('fonts/pixel.ttf', width // 45)
     pixel_medium = pygame.font.Font('fonts/pixel.ttf', width // 20)
@@ -129,7 +143,6 @@ class Text:
 
 
 class RestartBoard(Text):
-
     text_died = Text.metal_big.render("YOU DIED", False, (255, 0, 0))
     text_press = Text.pixel_small.render("press space to restart", False, (200, 200, 200))
 

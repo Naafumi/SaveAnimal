@@ -14,9 +14,9 @@ start_game = True
 
 
 # size of our screen
+
 WIDTH = 700
 HEIGHT = 800
-
 
 SCREEN_SIZE = (WIDTH, HEIGHT)
 
@@ -47,15 +47,19 @@ score = 0
 
 
 
+
 player = Player(WIDTH, HEIGHT)
 player_group = pygame.sprite.Group()
 player_group.add(player)
 
 # create enemies and group for function which generate them in game
 enemies_images = {
-    'oil': [f"{index}.png" for index in [1, 2, 3, 4]],
-    'cars': [f"{index}.png" for index in [1, 2, 3, 4]],
-    'fire': [f"{index}.png" for index in [1, 2, 3, 4]]}
+    # 'oil': [f"{index}.png" for index in [1, 2, 3, 4]],
+    # 'cars': [f"{index}.png" for index in [1, 2, 3, 4]],
+    # 'trash': [f"{index}.png" for index in [1, 2, 3, 4]],
+    # 'log': [f"{index}.png" for index in [1, 2, 3, 4]],
+    'fire': [f"{index}.png" for index in [1, 2, 3, 4]],
+    'trap': [f"{index}.png" for index in [1]]}
 
 static_enemies_surfaces = []
 animatic_enemies_surfaces = []
@@ -91,6 +95,40 @@ if __name__ == "__main__":
                 animatic_enemies_surfaces.append(
                     pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                            (WIDTH // 16, HEIGHT // 14)))
+        if path == 'trash':
+            for index in enemies_images[path]:
+                if index == '1.png':
+                    static_enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 8, HEIGHT // 12)))
+                if index == '2.png':
+                    static_enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 7, HEIGHT // 12)))
+                if index == '3.png':
+                    static_enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 6, HEIGHT // 7)))
+                if index == '4.png':
+                    static_enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 8, HEIGHT // 10)))
+
+        if path == 'log':
+            for index in enemies_images[path]:
+                if index == '1.png' or index == '4.png':
+                    static_enemies_surfaces.append(
+                        pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+                                               (WIDTH // 6, HEIGHT // 8)))
+                if index == '2.png' or index == '3.png' :
+                    static_enemies_surfaces.append(
+                        pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+                                               (WIDTH // 7, HEIGHT // 14)))
+
+        if path == 'trap':
+            for index in enemies_images[path]:
+                if index == '1.png':
+                    static_enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 8, HEIGHT // 12)))
+                if index == '2.png':
+                    static_enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 7, HEIGHT // 12)))
+                if index == '3.png':
+                    static_enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 6, HEIGHT // 7)))
+                if index == '4.png':
+                    static_enemies_surfaces.append(pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(), (WIDTH // 8, HEIGHT // 10)))
+
+
 
 static_enemies_group = pygame.sprite.Group()
 animatic_enemies_group = pygame.sprite.Group()
@@ -124,7 +162,7 @@ def display_score():
     global score
     score += game_speed // 3
 
-    text_score = Text.pixel_small.render(f"score: {score}", False, WHITE)
+    text_score = Text.pixel_medium.render(f"score: {score}", False, WHITE)
     return text_score
 
 
