@@ -136,8 +136,11 @@ pygame.time.set_timer(CREATE_ENEMY, speed_create)
 CHANGE_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(CHANGE_SPEED, 4000)
 
+
+
+
 ANIMATE_PLAYER = pygame.USEREVENT + 2
-pygame.time.set_timer(ANIMATE_PLAYER, game_speed * 100)
+pygame.time.set_timer(ANIMATE_PLAYER, 200 // (game_speed // begin_game_speed) if playerNotHit else 50)
 
 ANIMATE_FIRE = pygame.USEREVENT + 3
 pygame.time.set_timer(ANIMATE_FIRE, 150)
@@ -191,6 +194,7 @@ def reset_game():
     score_board = False
     global start_game
     start_game = False
+
 
 
 if __name__ == "__main__":
@@ -272,6 +276,8 @@ if __name__ == "__main__":
             actual_score = display_score()
             if collideRectEnemy(player, static_enemies_group):
                 playerNotHit = False
+
+
                 player.update(HEIGHT, game_speed)
 
             game_active, score_board = collideRectFire(player, fire_group)

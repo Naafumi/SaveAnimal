@@ -95,8 +95,8 @@ class Player(pygame.sprite.Sprite):
                                    (width // 10, width // 7)) for i in range(3)]
         self.pack_len = len(self.images_pack) - 1
         self.image = self.images_pack[0]
-        self.rect = self.image.get_rect(centerx=width // 2, bottom=height - self.image.get_height() * 3.5)
-        self.rect_begin = (width // 2 - (self.rect.width // 2), height - self.image.get_height() * 3.5)
+        self.rect = self.image.get_rect(centerx=width // 2, bottom=height - self.image.get_height() * 4)
+        self.rect_begin = (width // 2 - (self.rect.width // 2), height - self.image.get_height() * 4)
 
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -105,7 +105,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += args[1]
 
     def animatePlayer(self, playerNotHit):
-        print(playerNotHit)
         if playerNotHit:
             self.images_pack = [
                 pygame.transform.scale(pygame.image.load(f"images/player/bear/{i}.png").convert_alpha(), (self.width // 10, self.width // 7)) for i in range(3)]
