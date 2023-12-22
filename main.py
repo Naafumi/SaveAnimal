@@ -52,12 +52,13 @@ player_group.add(player)
 
 # create enemies and group for function which generate them in game
 enemies_images = {
-    'oil': [f"{index}.png" for index in [1, 2, 3, 4]],
-    'cars': [f"{index}.png" for index in [1, 2, 3, 4]],
-    'trash': [f"{index}.png" for index in [1, 2, 3, 4]],
-    'log': [f"{index}.png" for index in [1, 2, 3, 4]],
-    'fire': [f"{index}.png" for index in [1, 2, 3, 4]],
-    'trap': [f"{index}.png" for index in [1, 2]]}
+    # 'oil': [f"{index}.png" for index in [1, 2, 3, 4]],
+    # 'cars': [f"{index}.png" for index in [1, 2, 3, 4]],
+    # 'trash': [f"{index}.png" for index in [1, 2, 3, 4]],
+    'log': [f"{index}.png" for index in range(4)],
+    'fire': [f"{index}.png" for index in range(4)],
+    'trap': [f"{index}.png" for index in range(4)]}
+
 
 static_enemies_surfaces = {
     'freeze': [],
@@ -70,56 +71,57 @@ fire: Fire = Fire(WIDTH, HEIGHT)
 fire_group = pygame.sprite.Group()
 fire_group.add(fire)
 
-if __name__ == "__main__":
+
 
 #create surfaces from our images
-    for path in enemies_images:
-        if path == 'oil':
-            for index in enemies_images[path]:
-                static_enemies_surfaces['freeze'].append(
-                    pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+for path in enemies_images:
+    if path == 'oil':
+        for index in enemies_images[path]:
+            static_enemies_surfaces['freeze'].append(
+                pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                            (WIDTH // 9, HEIGHT // 13)))
 
 
-        if path == 'cars':
-            for index in enemies_images[path]:
-                size = [(WIDTH // 4, HEIGHT // 9), (WIDTH // 4, HEIGHT // 9), (WIDTH // 10, HEIGHT // 5), (WIDTH // 10, HEIGHT // 5) ]
-                for i in range(4):
-                    if index == f'{i + 1}.png':
-                        static_enemies_surfaces['freeze'].append(
-                            pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+    if path == 'cars':
+        for index in enemies_images[path]:
+            size = [(WIDTH // 4, HEIGHT // 9), (WIDTH // 4, HEIGHT // 9), (WIDTH // 10, HEIGHT // 5), (WIDTH // 10, HEIGHT // 5) ]
+            for i in range(4):
+                if index == f'{i}.png':
+                    static_enemies_surfaces['freeze'].append(
+                        pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
                                                    size[i]))
-        if path == 'fire':
-            for index in enemies_images[path]:
-                animatic_enemies_surfaces.append(
-                    pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
-                                           (WIDTH // 16, HEIGHT // 14)))
-        if path == 'trash':
-            for index in enemies_images[path]:
-                size = [(WIDTH // 8, HEIGHT // 12), (WIDTH // 7, HEIGHT // 12), (WIDTH // 6, HEIGHT // 7), (WIDTH // 8, HEIGHT // 10)]
-                for i in range(4):
-                    if index == f'{i+1}.png':
-                        static_enemies_surfaces['freeze'].append(
-                            pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
-                                                   size[i]))
+    if path == 'fire':
+        for index in enemies_images[path]:
+            animatic_enemies_surfaces.append(
+                pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+                                       (WIDTH // 16, HEIGHT // 14)))
+    if path == 'trash':
+        for index in enemies_images[path]:
+            size = [(WIDTH // 8, HEIGHT // 12), (WIDTH // 7, HEIGHT // 12), (WIDTH // 6, HEIGHT // 7), (WIDTH // 8, HEIGHT // 10)]
+            for i in range(4):
+                if index == f'{i+1}.png':
+                    static_enemies_surfaces['freeze'].append(
+                        pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+                                               size[i]))
 
-        if path == 'log':
-            for index in enemies_images[path]:
-                size = [(WIDTH // 6, HEIGHT // 8), (WIDTH // 7, HEIGHT // 14), (WIDTH // 7, HEIGHT // 14), (WIDTH // 6, HEIGHT // 8)]
-                for i in range(4):
-                    if index == f'{i + 1}.png':
-                        static_enemies_surfaces['freeze'].append(
-                            pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
-                                                   size[i]))
+    if path == 'log':
+        for index in enemies_images[path]:
+            size = [(WIDTH // 6, HEIGHT // 8), (WIDTH // 7, HEIGHT // 14), (WIDTH // 7, HEIGHT // 14), (WIDTH // 6, HEIGHT // 8)]
+            for i in range(4):
+                if index == f'{i}.png':
+                    static_enemies_surfaces['freeze'].append(
+                        pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+                                               size[i]))
 
-        if path == 'trap':
-            for index in enemies_images[path]:
-                size = [(WIDTH // 8, HEIGHT // 12), (WIDTH // 7, HEIGHT // 12),  (WIDTH // 6, HEIGHT // 7), (WIDTH // 8, HEIGHT // 10)]
-                for i in range(4):
-                    if index == f'{i + 1}.png':
-                        static_enemies_surfaces['kill'].append(
-                            pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
-                                                   size[i]))
+    if path == 'trap':
+
+        for index in enemies_images[path]:
+            size = [(WIDTH // 8, HEIGHT // 12), (WIDTH // 7, HEIGHT // 12), (WIDTH // 9, HEIGHT // 12), (WIDTH // 8, HEIGHT // 10)]
+            for i in range(4):
+                if index == f'{i}.png':
+                    static_enemies_surfaces['kill'].append(
+                        pygame.transform.scale(pygame.image.load(f'images/enemies/{path}/{index}').convert_alpha(),
+                                               size[i]))
 
 
 
@@ -228,7 +230,7 @@ if __name__ == "__main__":
                 if back == 'fire':
                     screen.blit(RestartBoard.image_bear_fired, (WIDTH//2-RestartBoard.image_bear_fired.get_width()//2, HEIGHT//2))
                 if back == 'trap':
-                    pass
+                    screen.blit(RestartBoard.image_bear_trapped, (0, 0))
                 screen.blit(RestartBoard.text_press, (WIDTH // 2 - RestartBoard.text_press.get_width() // 2, HEIGHT-HEIGHT//30))
 
                 # draw buttons and check whether are pressed
@@ -252,8 +254,8 @@ if __name__ == "__main__":
 
                     speed_create = 1500 // (game_speed // begin_game_speed)
                     pygame.time.set_timer(CREATE_ENEMY, speed_create)
-                if event.type == ANIMATE_PLAYER and playerNotHit:
-                    player.animatePlayer()
+                if event.type == ANIMATE_PLAYER:
+                    player.animatePlayer(playerNotHit)
 
                 if event.type == ANIMATE_FIRE:
                     fire.animateFire(HEIGHT)

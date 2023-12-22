@@ -3,7 +3,8 @@ import pygame
 from Objects import Enemy
 
 
-def createEnemy(static_group, static_surfaces, animate_group, animate_surfaces, static_enemy_kill, width):
+def createEnemy(static_group, static_surfaces, animate_group, animate_surfaces, static_kill_group, width):
+
     stat_or_anim = randint(0, 1)
     if stat_or_anim == 0:
         kill = randint(0, 1)
@@ -11,9 +12,11 @@ def createEnemy(static_group, static_surfaces, animate_group, animate_surfaces, 
             random_index = randint(0, len(static_surfaces['kill']) - 1)
             random_x = randint(20, width - 20)
             name = 'kill'
-            return Enemy.staticKillerEnemy(random_x, static_surfaces[name][random_index], static_enemy_kill)
+            return Enemy.staticKillerEnemy(random_x, static_surfaces[name][random_index], static_kill_group)
         if kill == 0:
+
             random_index = randint(0, len(static_surfaces['freeze']) - 1)
+
             random_x = randint(20, width - 20)
             name = 'freeze'
             return Enemy.staticEnemy(random_x, static_surfaces[name][random_index], static_group)
@@ -27,6 +30,7 @@ def createEnemy(static_group, static_surfaces, animate_group, animate_surfaces, 
 
 def collideRectEnemy(player, enemies_gr):
     if pygame.sprite.spritecollide(player, enemies_gr, False, pygame.sprite.collide_mask):
+
         return True
     else:
         return False

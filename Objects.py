@@ -88,6 +88,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, width, height):
         pygame.sprite.Sprite.__init__(self)
         self.i = int(0)
+        self.width = width
+        self.height = height
         self.images_pack = [
             pygame.transform.scale(pygame.image.load(f"images/player/bear/{i}.png").convert_alpha(),
                                    (width // 10, width // 7)) for i in range(3)]
@@ -102,8 +104,14 @@ class Player(pygame.sprite.Sprite):
         if self.rect.y < args[0]:
             self.rect.y += args[1]
 
-    def animatePlayer(self):
-
+    def animatePlayer(self, playerNotHit):
+        print(playerNotHit)
+        if playerNotHit:
+            self.images_pack = [
+                pygame.transform.scale(pygame.image.load(f"images/player/bear/{i}.png").convert_alpha(), (self.width // 10, self.width // 7)) for i in range(3)]
+        if not playerNotHit:
+            self.images_pack = [
+                    pygame.transform.scale(pygame.image.load(f"images/player/stars/{i}.png").convert_alpha(), (self.width // 10, self.width // 7)) for i in range(4)]
         self.image = self.images_pack[self.i]
         if self.i == self.pack_len:
             self.i = 0
@@ -138,14 +146,9 @@ class Fire(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(bottomleft=(0, height))
 
 
-
-
-
 class StaticObjects:
     width = 700
     height = 800
-
-
 
     WHITE = (255, 255, 255)
     pixel_small = pygame.font.Font('fonts/pixel.ttf', width // 45)
@@ -157,7 +160,10 @@ class StaticObjects:
 class RestartBoard(StaticObjects):
     text_died = StaticObjects.metal_big.render("YOU DIED", False, (255, 0, 0))
     text_press = StaticObjects.pixel_small.render("press space to restart", False, (200, 200, 200))
-    image_bear_fired = pygame.transform.scale(pygame.image.load("images/scoreboard/bearfired.png"), (StaticObjects.width // 2, StaticObjects.height // 2))
+    image_bear_fired = pygame.transform.scale(pygame.image.load("images/scoreboard/fire/0.png"),
+                                              (StaticObjects.width // 2, StaticObjects.height // 2))
+    image_bear_trapped = pygame.transform.scale(pygame.image.load("images/scoreboard/trap/0.png"),
+                                              (StaticObjects.width, StaticObjects.height))
 
 class StartMenu(StaticObjects):
     start_text = [StaticObjects.pixel_big.render("Welcome", False, StaticObjects.WHITE),
