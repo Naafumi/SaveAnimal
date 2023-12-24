@@ -119,11 +119,14 @@ class Player(pygame.sprite.Sprite):
 
 
 class Background:
-    def __init__(self, width, height):
-        self.image = pygame.transform.scale(pygame.image.load("images/background/3.png").convert(), (width, height))
-        self.tiles = ceil(height / self.image.get_height()) + 1  # tiles make endless background scrolling ,
+    def __init__(self, WIDTH, HEIGHT):
+        self.image = pygame.transform.scale(pygame.image.load("images/background/3.png").convert(), (WIDTH, HEIGHT))
+        self.tiles = ceil(HEIGHT/self.image.get_height())+1 #tiles make endless background scrolling ,
         self.list_bg = [self.image for x in range(self.tiles)]
-        self.scroll = 0  # variable which scroll our background
+        self.scroll = 0 #variable which scroll our background
+
+
+
 
 
 class Fire(pygame.sprite.Sprite):
