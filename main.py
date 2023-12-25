@@ -48,6 +48,7 @@ score = 0
 
 #load sounds
 sound_hits = [pygame.mixer.Sound(f'sounds/hits/{i}.wav') for i in range(6)]
+sound_trap = [pygame.mixer.Sound(f'sounds/trap/{i}.wav') for i in range(5)]
 sound_bears = [pygame.mixer.Sound(f'sounds/bear/{i}.wav') for i in range(3)]
 pygame.mixer.music.load('sounds/soundtrackfinal.wav')
 
@@ -175,7 +176,7 @@ ANIMATE_ENEMIES = pygame.USEREVENT + 4
 pygame.time.set_timer(ANIMATE_ENEMIES, 250)
 
 SOUND_BEAR = pygame.USEREVENT + 5
-pygame.time.set_timer(SOUND_BEAR, 7500)
+pygame.time.set_timer(SOUND_BEAR, 10000)
 
 
 
@@ -304,10 +305,9 @@ if __name__ == "__main__":
 
                 if event.type == SOUND_BEAR:
                     rand_sx = randint(0, 2)
-                    rand_t = randint(7000, 15000)
+                    rand_t = randint(10000, 17000)
                     sound_bears[rand_sx].play()
                     pygame.time.set_timer(SOUND_BEAR, rand_t)
-
 
 
 
@@ -328,12 +328,15 @@ if __name__ == "__main__":
 
                 game_active, score_board = collideRectFire(player, fire_group)
 
+
             if collideRectEnemy(player, static_enemies_group_k):
                 game_active, score_board = collideRectFire(player, static_enemies_group_k)
-
+                rand_x = randint(0, 4)
+                sound_trap[rand_x].play()
                 back = 'trap'
             if collideRectEnemy(player, animatic_enemies_group):
                 game_active, score_board = collideRectFire(player, animatic_enemies_group)
+
                 back = 'fire'
 
 
