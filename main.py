@@ -34,7 +34,7 @@ back = 'fire'
 
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))  # provide size of screen
-pygame.display.set_caption("Save Him@")  # Game's name
+pygame.display.set_caption("Save Him!")  # Game's name
 pygame.display.set_icon(pygame.image.load("images/bear.png").convert())  # our logo of game
 
 clock = pygame.time.Clock()
