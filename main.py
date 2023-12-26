@@ -47,10 +47,12 @@ speed_create = 3000
 score = 0
 
 #load sounds
-sound_hits = [pygame.mixer.Sound(f'sounds/hits/{i}.wav') for i in range(6)]
-sound_trap = [pygame.mixer.Sound(f'sounds/trap/{i}.wav') for i in range(5)]
-sound_bears = [pygame.mixer.Sound(f'sounds/bear/{i}.wav') for i in range(3)]
-pygame.mixer.music.load('sounds/soundtrackfinal.wav')
+class Sound:
+
+    hits = [pygame.mixer.Sound(f'sounds/hits/{i}.wav') for i in range(6)]
+    trap = [pygame.mixer.Sound(f'sounds/trap/{i}.wav') for i in range(5)]
+    bears = [pygame.mixer.Sound(f'sounds/bear/{i}.wav') for i in range(3)]
+    pygame.mixer.music.load('sounds/soundtrackfinal.wav')
 
 
 
@@ -306,7 +308,7 @@ if __name__ == "__main__":
                 if event.type == SOUND_BEAR:
                     rand_sx = randint(0, 2)
                     rand_t = randint(10000, 17000)
-                    sound_bears[rand_sx].play()
+                    Sound.bears[rand_sx].play()
                     pygame.time.set_timer(SOUND_BEAR, rand_t)
 
 
@@ -321,7 +323,7 @@ if __name__ == "__main__":
                 playerNotHit = False
                 checkCollide = False
                 rand_x = randint(0, 5)
-                sound_hits[rand_x].play()
+                Sound.hits[rand_x].play()
 
             if not playerNotHit:
                 player.update(HEIGHT, game_speed)
@@ -332,7 +334,7 @@ if __name__ == "__main__":
             if collideRectEnemy(player, static_enemies_group_k):
                 game_active, score_board = collideRectFire(player, static_enemies_group_k)
                 rand_x = randint(0, 4)
-                sound_trap[rand_x].play()
+                Sound.trap[rand_x].play()
                 back = 'trap'
             if collideRectEnemy(player, animatic_enemies_group):
                 game_active, score_board = collideRectFire(player, animatic_enemies_group)
